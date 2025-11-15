@@ -8,29 +8,22 @@ const REPO_CONFIG = {
 
 // State Management
 const state = {
-  token: sessionStorage.getItem("admin_token"), // Session only, hilang saat close browser
+  token: sessionStorage.getItem("admin_token"),
   isAdmin: false,
   files: [],
   currentFile: null,
-  theme: localStorage.getItem("theme") || "light",
 };
 
 // DOM Elements
 const elements = {
-  adminModeBtn: document.getElementById("adminModeBtn"),
-  modeIndicator: document.getElementById("modeIndicator"),
   newDocBtn: document.getElementById("newDocBtn"),
-  fileInput: document.getElementById("fileInput"),
   fileList: document.getElementById("fileList"),
   searchInput: document.getElementById("searchInput"),
-  themeToggle: document.getElementById("themeToggle"),
 
-  welcomeScreen: document.getElementById("welcomeScreen"),
   viewerScreen: document.getElementById("viewerScreen"),
   editorScreen: document.getElementById("editorScreen"),
 
   docTitle: document.getElementById("docTitle"),
-  docPath: document.getElementById("docPath"),
   markdownContent: document.getElementById("markdownContent"),
   editBtn: document.getElementById("editBtn"),
   deleteBtn: document.getElementById("deleteBtn"),
@@ -47,23 +40,20 @@ const elements = {
 
 // Initialize
 function init() {
-  setupTheme();
-  setupEventListeners();
-
   if (state.token) {
     state.isAdmin = true;
     updateUI();
   }
 
+  setupEventListeners();
   loadFiles();
+  handleURLRouting();
 }
 
 // Event Listeners
 function setupEventListeners() {
-  elements.adminModeBtn.addEventListener("click", toggleAdminMode);
   elements.newDocBtn.addEventListener("click", createNewDocument);
   elements.searchInput.addEventListener("input", handleSearch);
-  elements.themeToggle.addEventListener("click", toggleTheme);
 
   elements.markdownEditor.addEventListener("input", updatePreview);
   elements.saveBtn.addEventListener("click", saveDocument);
@@ -72,67 +62,33 @@ function setupEventListeners() {
   elements.editBtn.addEventListener("click", editCurrentDocument);
   elements.deleteBtn.addEventListener("click", deleteCurrentDocument);
   elements.downloadBtn.addEventListener("click", downloadCurrentDocument);
+
+  window.addEventListener("popstate", handleURLRouting);
 }
 
-// Theme
-function setupTheme() {
-  document.body.setAttribute("data-theme", state.theme);
-  elements.themeToggle.textContent = state.theme === "dark" ? "☀️" : "🌙";
-}
-
-function toggleTheme() {
-  state.theme = state.theme === "dark" ? "light" : "dark";
-  localStorage.setItem("theme", state.theme);
-  setupTheme();
-}
-
-// Admin Mode Toggle
-function toggleAdminMode() {
-  if (state.isAdmin) {
-    // Logout admin
-    if (confirm("Exit admin mode?")) {
-      state.token = null;
-      state.isAdmin = false;
-      sessionStorage.removeItem("admin_token");
-      updateUI();
-      showWelcomeScreen();
-    }
-  } else {
-    // Enter admin mode
-    const token = prompt(
-      "🔑 Enter GitHub Personal Access Token:\n\n" +
-        "Create at: https://github.com/settings/tokens\n" +
-        "Required scope: repo\n\n" +
-        "⚠️ Token will be stored in session only (cleared on browser close)",
-    );
-
-    if (token && token.trim()) {
-      state.token = token.trim();
-      sessionStorage.setItem("admin_token", state.token);
-      state.isAdmin = true;
-      updateUI();
-      loadFiles();
+// URL Routing
+function handleURLRouting() {
+  const hash = window.location.hash.substring(1);
+  if (hash) {
+    const fileName = decodeURIComponent(hash);
+    const file = state.files.find((f) => f.name === fileName);
+    if (file) {
+      viewDocument(file);
     }
   }
+}
+
+function setURLHash(fileName) {
+  window.location.hash = encodeURIComponent(fileName);
 }
 
 // UI Update
 function updateUI() {
   if (state.isAdmin) {
-    elements.adminModeBtn.textContent = "🚪 Exit Admin";
-    elements.adminModeBtn.className = "btn-danger";
-    elements.modeIndicator.textContent = "⚡ Admin Mode";
-    elements.modeIndicator.style.color = "#c0392b";
-    elements.modeIndicator.style.fontWeight = "bold";
     elements.newDocBtn.disabled = false;
     elements.editBtn.disabled = false;
     elements.deleteBtn.disabled = false;
   } else {
-    elements.adminModeBtn.textContent = "🔑 Admin Mode";
-    elements.adminModeBtn.className = "btn-secondary";
-    elements.modeIndicator.textContent = "👁️ Public Mode";
-    elements.modeIndicator.style.color = "#666";
-    elements.modeIndicator.style.fontWeight = "normal";
     elements.newDocBtn.disabled = true;
     elements.editBtn.disabled = true;
     elements.deleteBtn.disabled = true;
@@ -163,7 +119,7 @@ async function githubAPI(endpoint, options = {}) {
   return response.json();
 }
 
-// Load Files (Public - No Auth Required)
+// Load Files
 async function loadFiles() {
   try {
     showLoading(true);
@@ -179,25 +135,20 @@ async function loadFiles() {
       renderFileList();
     } catch (error) {
       if (error.message.includes("404")) {
-        elements.fileList.innerHTML =
-          '<p class="empty-state">No documents yet.<br>Admin: Create your first document!</p>';
         state.files = [];
+        renderFileList();
       } else {
         throw error;
       }
     }
   } catch (error) {
     console.error("Failed to load files:", error);
-    elements.fileList.innerHTML =
-      '<p class="empty-state">Failed to load documents.<br>' +
-      error.message +
-      "</p>";
   } finally {
     showLoading(false);
   }
 }
 
-// Get File Content (Public)
+// Get File Content
 async function getFileContent(file) {
   try {
     showLoading(true);
@@ -211,12 +162,9 @@ async function getFileContent(file) {
   }
 }
 
-// Save File (Admin Only)
+// Save File
 async function saveFileToGitHub(fileName, content, message, sha = null) {
-  if (!state.isAdmin) {
-    alert("⚠️ Admin mode required to save!");
-    return false;
-  }
+  if (!state.isAdmin) return false;
 
   try {
     showLoading(true);
@@ -241,25 +189,20 @@ async function saveFileToGitHub(fileName, content, message, sha = null) {
     );
 
     await loadFiles();
-    alert("✅ Document saved!");
     return true;
   } catch (error) {
     console.error("Failed to save:", error);
-    alert("❌ Failed to save: " + error.message);
+    alert("Failed to save: " + error.message);
     return false;
   } finally {
     showLoading(false);
   }
 }
 
-// Delete File (Admin Only)
+// Delete File
 async function deleteFileFromGitHub(file) {
-  if (!state.isAdmin) {
-    alert("⚠️ Admin mode required to delete!");
-    return;
-  }
-
-  if (!confirm(`Delete "${file.name}"?\n\nCannot be undone!`)) return;
+  if (!state.isAdmin) return;
+  if (!confirm(`Delete "${file.name}"?`)) return;
 
   try {
     showLoading(true);
@@ -276,11 +219,10 @@ async function deleteFileFromGitHub(file) {
     );
 
     await loadFiles();
-    showWelcomeScreen();
-    alert("✅ Document deleted!");
+    hideViewer();
   } catch (error) {
     console.error("Failed to delete:", error);
-    alert("❌ Failed to delete: " + error.message);
+    alert("Failed to delete: " + error.message);
   } finally {
     showLoading(false);
   }
@@ -289,16 +231,14 @@ async function deleteFileFromGitHub(file) {
 // UI Rendering
 function renderFileList(files = state.files) {
   if (files.length === 0) {
-    elements.fileList.innerHTML =
-      '<p class="empty-state">No documents found</p>';
+    elements.fileList.innerHTML = "";
     return;
   }
 
   elements.fileList.innerHTML = files
     .map(
       (file) => `
-        <div class="file-item" data-path="${file.path}">
-            <span class="file-icon">📄</span>
+        <div class="file-item" data-path="${file.path}" data-name="${file.name}">
             <span class="file-name">${file.name}</span>
         </div>
     `,
@@ -309,6 +249,20 @@ function renderFileList(files = state.files) {
     item.addEventListener("click", () => {
       const file = files.find((f) => f.path === item.dataset.path);
       viewDocument(file);
+    });
+
+    // Right click to copy share link
+    item.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+      const fileName = item.dataset.name;
+      const shareURL = `${window.location.origin}${window.location.pathname}#${encodeURIComponent(fileName)}`;
+      navigator.clipboard.writeText(shareURL).then(() => {
+        const originalText = item.querySelector(".file-name").textContent;
+        item.querySelector(".file-name").textContent = "Link copied!";
+        setTimeout(() => {
+          item.querySelector(".file-name").textContent = originalText;
+        }, 1000);
+      });
     });
   });
 }
@@ -322,21 +276,19 @@ function handleSearch(event) {
 }
 
 // Screen Navigation
-function showWelcomeScreen() {
-  elements.welcomeScreen.classList.remove("hidden");
+function hideViewer() {
   elements.viewerScreen.classList.add("hidden");
   elements.editorScreen.classList.add("hidden");
   state.currentFile = null;
+  window.location.hash = "";
 }
 
 function showViewerScreen() {
-  elements.welcomeScreen.classList.add("hidden");
   elements.viewerScreen.classList.remove("hidden");
   elements.editorScreen.classList.add("hidden");
 }
 
 function showEditorScreen() {
-  elements.welcomeScreen.classList.add("hidden");
   elements.viewerScreen.classList.add("hidden");
   elements.editorScreen.classList.remove("hidden");
 }
@@ -348,20 +300,17 @@ async function viewDocument(file) {
     state.currentFile = { ...file, content };
 
     elements.docTitle.textContent = file.name;
-    elements.docPath.textContent = file.path;
     renderMarkdown(content, elements.markdownContent);
 
     showViewerScreen();
+    setURLHash(file.name);
   } catch (error) {
-    alert("❌ Failed to load document: " + error.message);
+    alert("Failed to load document: " + error.message);
   }
 }
 
 function createNewDocument() {
-  if (!state.isAdmin) {
-    alert("⚠️ Admin mode required!");
-    return;
-  }
+  if (!state.isAdmin) return;
 
   state.currentFile = null;
   elements.fileNameInput.value = "";
@@ -371,12 +320,7 @@ function createNewDocument() {
 }
 
 function editCurrentDocument() {
-  if (!state.isAdmin) {
-    alert("⚠️ Admin mode required to edit!");
-    return;
-  }
-
-  if (!state.currentFile) return;
+  if (!state.isAdmin || !state.currentFile) return;
 
   elements.fileNameInput.value = state.currentFile.name;
   elements.markdownEditor.value = state.currentFile.content;
@@ -389,12 +333,12 @@ async function saveDocument() {
   const content = elements.markdownEditor.value;
 
   if (!fileName) {
-    alert("⚠️ File name required!");
+    alert("File name required");
     return;
   }
 
   if (!fileName.endsWith(".md") && !fileName.endsWith(".markdown")) {
-    alert("⚠️ File must end with .md or .markdown");
+    alert("File must end with .md");
     return;
   }
 
@@ -406,17 +350,15 @@ async function saveDocument() {
   const success = await saveFileToGitHub(fileName, content, message, sha);
 
   if (success) {
-    showWelcomeScreen();
+    hideViewer();
   }
 }
 
 function cancelEdit() {
-  if (confirm("Discard changes?")) {
-    if (state.currentFile) {
-      viewDocument(state.currentFile);
-    } else {
-      showWelcomeScreen();
-    }
+  if (state.currentFile) {
+    viewDocument(state.currentFile);
+  } else {
+    hideViewer();
   }
 }
 

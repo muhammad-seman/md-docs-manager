@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="login-container">
+        <form id="loginForm">
+            <input type="password" id="tokenInput" class="login-input" autofocus>
+            <button type="submit" class="btn-primary">Enter</button>
+        </form>
+    </div>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const token = document.getElementById('tokenInput').value.trim();
+            if (token) {
+                sessionStorage.setItem('admin_token', token);
+                window.location.href = '/md-docs-manager/';
+            }
+        });
+    </script>
+</body>
+</html>

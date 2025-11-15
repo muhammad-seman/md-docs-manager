@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="id">
+<html lang="en">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>MD Docs - Online Markdown Storage</title>
+        <title>Documents</title>
         <link rel="stylesheet" href="style.css" />
         <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
         <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
@@ -14,110 +14,34 @@
     </head>
     <body>
         <div class="container">
-            <!-- Header -->
             <header>
                 <div class="header-content">
-                    <h1>📝 MD Docs Storage</h1>
+                    <h1>Documents</h1>
                     <div class="header-actions">
-                        <button
-                            id="themeToggle"
-                            class="btn-icon"
-                            title="Toggle Theme"
-                        >
-                            ☀️
-                        </button>
-                        <span id="modeIndicator" class="mode-indicator"
-                            >👁️ Public Mode</span
-                        >
-                        <button id="adminModeBtn" class="btn-secondary">
-                            🔑 Admin Mode
+                        <button id="newDocBtn" class="btn-primary" disabled>
+                            New
                         </button>
                     </div>
                 </div>
             </header>
 
-            <!-- Main Content -->
             <div class="main-content">
-                <!-- Sidebar -->
                 <aside class="sidebar">
-                    <div class="sidebar-header">
-                        <h2>Documents</h2>
-                        <button id="newDocBtn" class="btn-primary" disabled>
-                            + New
-                        </button>
-                    </div>
-
                     <div class="search-box">
                         <input
                             type="text"
                             id="searchInput"
-                            placeholder="🔍 Search..."
+                            placeholder="Search"
                         />
                     </div>
-
-                    <div id="fileList" class="file-list">
-                        <p class="empty-state">Loading documents...</p>
-                    </div>
+                    <div id="fileList" class="file-list"></div>
                 </aside>
 
-                <!-- Content Area -->
                 <main class="content-area">
-                    <div id="welcomeScreen" class="welcome-screen">
-                        <div class="welcome-content">
-                            <h2>📝 Online Markdown Storage</h2>
-                            <p>
-                                Simple & free markdown document storage powered
-                                by GitHub
-                            </p>
-
-                            <div class="features">
-                                <div class="feature">
-                                    <span class="icon">👁️</span>
-                                    <h3>Public Access</h3>
-                                    <p>Anyone can read documents</p>
-                                </div>
-                                <div class="feature">
-                                    <span class="icon">🔑</span>
-                                    <h3>Admin Mode</h3>
-                                    <p>Create & edit with token</p>
-                                </div>
-                                <div class="feature">
-                                    <span class="icon">📁</span>
-                                    <h3>Unlimited Storage</h3>
-                                    <p>Stored on GitHub</p>
-                                </div>
-                                <div class="feature">
-                                    <span class="icon">🎨</span>
-                                    <h3>Markdown Support</h3>
-                                    <p>Full markdown syntax</p>
-                                </div>
-                            </div>
-
-                            <div class="start-guide">
-                                <h3>How to use:</h3>
-                                <ol>
-                                    <li>
-                                        <strong>Public:</strong> Browse and read
-                                        documents
-                                    </li>
-                                    <li>
-                                        <strong>Admin:</strong> Click "Admin
-                                        Mode" to create/edit (requires token)
-                                    </li>
-                                    <li>
-                                        Create new document or upload .md file
-                                    </li>
-                                    <li>Share link to anyone</li>
-                                </ol>
-                            </div>
-                        </div>
-                    </div>
-
                     <div id="viewerScreen" class="viewer-screen hidden">
                         <div class="document-header">
                             <div class="doc-title">
-                                <h2 id="docTitle">Document Title</h2>
-                                <span id="docPath" class="doc-path"></span>
+                                <h2 id="docTitle"></h2>
                             </div>
                             <div class="doc-actions">
                                 <button
@@ -125,17 +49,17 @@
                                     class="btn-secondary"
                                     disabled
                                 >
-                                    ✏️ Edit
+                                    Edit
                                 </button>
                                 <button
                                     id="deleteBtn"
                                     class="btn-danger"
                                     disabled
                                 >
-                                    🗑️ Delete
+                                    Delete
                                 </button>
                                 <button id="downloadBtn" class="btn-secondary">
-                                    ⬇️ Download
+                                    Download
                                 </button>
                             </div>
                         </div>
@@ -147,31 +71,26 @@
                             <input
                                 type="text"
                                 id="fileNameInput"
-                                placeholder="document-name.md"
+                                placeholder="filename.md"
                                 class="file-name-input"
                             />
                             <div class="editor-actions">
                                 <button id="saveBtn" class="btn-primary">
-                                    💾 Save
+                                    Save
                                 </button>
                                 <button
                                     id="cancelEditBtn"
                                     class="btn-secondary"
                                 >
-                                    ❌ Cancel
+                                    Cancel
                                 </button>
                             </div>
                         </div>
                         <div class="editor-container">
                             <div class="editor-panel">
-                                <h3>Editor</h3>
-                                <textarea
-                                    id="markdownEditor"
-                                    placeholder="# Paste or type your markdown here..."
-                                ></textarea>
+                                <textarea id="markdownEditor"></textarea>
                             </div>
                             <div class="preview-panel">
-                                <h3>Preview</h3>
                                 <div
                                     id="markdownPreview"
                                     class="markdown-body"
@@ -183,19 +102,8 @@
             </div>
         </div>
 
-        <!-- Hidden File Input -->
-        <input
-            type="file"
-            id="fileInput"
-            accept=".md,.markdown"
-            multiple
-            style="display: none"
-        />
-
-        <!-- Loading Overlay -->
         <div id="loadingOverlay" class="loading-overlay hidden">
             <div class="spinner"></div>
-            <p>Loading...</p>
         </div>
 
         <script src="app.js"></script>
