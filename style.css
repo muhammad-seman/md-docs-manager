@@ -35,11 +35,15 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+    font-family:
+        -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica,
+        Arial, sans-serif;
     background-color: var(--bg-primary);
     color: var(--text-primary);
     line-height: 1.6;
-    transition: background-color 0.3s, color 0.3s;
+    transition:
+        background-color 0.3s,
+        color 0.3s;
 }
 
 .container {
@@ -321,7 +325,7 @@ header h1 {
     background-color: var(--bg-primary);
     color: var(--text-primary);
     font-size: 1rem;
-    font-family: 'Monaco', 'Menlo', monospace;
+    font-family: "Monaco", "Menlo", monospace;
 }
 
 .editor-actions {
@@ -363,7 +367,7 @@ header h1 {
     border: none;
     background-color: var(--bg-primary);
     color: var(--text-primary);
-    font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+    font-family: "Monaco", "Menlo", "Courier New", monospace;
     font-size: 0.9rem;
     line-height: 1.6;
     resize: none;
@@ -406,10 +410,18 @@ header h1 {
     padding-bottom: 0.3em;
 }
 
-.markdown-body h3 { font-size: 1.25em; }
-.markdown-body h4 { font-size: 1em; }
-.markdown-body h5 { font-size: 0.875em; }
-.markdown-body h6 { font-size: 0.85em; }
+.markdown-body h3 {
+    font-size: 1.25em;
+}
+.markdown-body h4 {
+    font-size: 1em;
+}
+.markdown-body h5 {
+    font-size: 0.875em;
+}
+.markdown-body h6 {
+    font-size: 0.85em;
+}
 
 .markdown-body p {
     margin-bottom: 1em;
@@ -419,7 +431,7 @@ header h1 {
     padding: 0.2em 0.4em;
     background-color: var(--bg-tertiary);
     border-radius: 3px;
-    font-family: 'Monaco', 'Menlo', monospace;
+    font-family: "Monaco", "Menlo", monospace;
     font-size: 0.9em;
 }
 
@@ -511,7 +523,7 @@ header h1 {
 
 .btn-primary {
     background-color: var(--accent-color);
-    color: white;
+    color: #ffffff !important;
 }
 
 .btn-primary:hover {
@@ -578,7 +590,9 @@ header h1 {
 }
 
 @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .loading-overlay p {

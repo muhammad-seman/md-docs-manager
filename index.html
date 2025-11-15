@@ -26,13 +26,18 @@
                         >
                             🌙
                         </button>
-                        <button
-                            id="loginBtn"
-                            class="btn-primary"
-                            style="display: inline-block"
+                        <div
+                            class="login-buttons"
+                            id="loginButtons"
+                            style="display: flex; gap: 0.5rem"
                         >
-                            Login with GitHub
-                        </button>
+                            <button id="loginOAuthBtn" class="btn-primary">
+                                🔐 Login with GitHub
+                            </button>
+                            <button id="loginTokenBtn" class="btn-secondary">
+                                🔑 Use Token
+                            </button>
+                        </div>
                         <div
                             id="userInfo"
                             class="user-info"
@@ -130,7 +135,10 @@
                             <div class="start-guide">
                                 <h3>Cara Memulai:</h3>
                                 <ol>
-                                    <li>Klik "Login with GitHub" di atas</li>
+                                    <li>
+                                        Klik "Login with GitHub" untuk OAuth
+                                        (recommended) atau "Use Token"
+                                    </li>
                                     <li>
                                         Authorize aplikasi untuk akses
                                         repository
