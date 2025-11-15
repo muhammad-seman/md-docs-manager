@@ -1,8 +1,7 @@
 // GitHub OAuth Configuration
 const OAUTH_CONFIG = {
-  clientId: "YOUR_GITHUB_OAUTH_CLIENT_ID", // Set this in oauth-config.js or here
-  redirectUri:
-    window.location.origin + window.location.pathname.replace(/\/$/, ""),
+  clientId: "Ov23liUQiJUP9NCLvWyA",
+  redirectUri: "https://muhammad-seman.github.io/md-docs-manager/",
   scope: "repo",
   authEndpoint: "https://github.com/login/oauth/authorize",
 };
