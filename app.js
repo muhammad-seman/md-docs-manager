@@ -1,7 +1,7 @@
 // GitHub Repository Configuration
 const REPO_CONFIG = {
   owner: "muhammad-seman",
-  name: "md-docs-storage", // Ganti dengan nama repo untuk storage
+  name: "md-docs-storage",
   path: "docs/",
   branch: "main",
 };
