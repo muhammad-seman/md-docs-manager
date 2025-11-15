@@ -46,6 +46,15 @@ header h1 {
     align-items: center;
 }
 
+.mode-indicator {
+    font-size: 12px;
+    padding: 4px 10px;
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    color: #666;
+}
+
 .login-buttons {
     display: flex;
     gap: 6px;

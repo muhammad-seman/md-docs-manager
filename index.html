@@ -3,13 +3,13 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>MD Docs Manager - GitHub Storage</title>
+        <title>MD Docs - Online Markdown Storage</title>
         <link rel="stylesheet" href="style.css" />
         <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
         <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
         <link
             rel="stylesheet"
-            href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css"
+            href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github.min.css"
         />
     </head>
     <body>
@@ -17,37 +17,21 @@
             <!-- Header -->
             <header>
                 <div class="header-content">
-                    <h1>📝 MD Docs Manager</h1>
+                    <h1>📝 MD Docs Storage</h1>
                     <div class="header-actions">
                         <button
                             id="themeToggle"
                             class="btn-icon"
                             title="Toggle Theme"
                         >
-                            🌙
+                            ☀️
                         </button>
-                        <div
-                            class="login-buttons"
-                            id="loginButtons"
-                            style="display: flex; gap: 0.5rem"
+                        <span id="modeIndicator" class="mode-indicator"
+                            >👁️ Public Mode</span
                         >
-                            <button id="loginOAuthBtn" class="btn-primary">
-                                🔐 Login with GitHub
-                            </button>
-                            <button id="loginTokenBtn" class="btn-secondary">
-                                🔑 Use Token
-                            </button>
-                        </div>
-                        <div
-                            id="userInfo"
-                            class="user-info"
-                            style="display: none"
-                        >
-                            <span id="username"></span>
-                            <button id="logoutBtn" class="btn-secondary">
-                                Logout
-                            </button>
-                        </div>
+                        <button id="adminModeBtn" class="btn-secondary">
+                            🔑 Admin Mode
+                        </button>
                     </div>
                 </div>
             </header>
@@ -57,9 +41,9 @@
                 <!-- Sidebar -->
                 <aside class="sidebar">
                     <div class="sidebar-header">
-                        <h2>Dokumen</h2>
-                        <button id="uploadBtn" class="btn-primary" disabled>
-                            + Upload
+                        <h2>Documents</h2>
+                        <button id="newDocBtn" class="btn-primary" disabled>
+                            + New
                         </button>
                     </div>
 
@@ -67,35 +51,12 @@
                         <input
                             type="text"
                             id="searchInput"
-                            placeholder="🔍 Cari dokumen..."
+                            placeholder="🔍 Search..."
                         />
-                    </div>
-
-                    <div class="repo-config hidden" id="repoConfig">
-                        <h3>Repository Settings</h3>
-                        <input
-                            type="text"
-                            id="repoOwner"
-                            placeholder="username"
-                        />
-                        <input
-                            type="text"
-                            id="repoName"
-                            placeholder="repository-name"
-                        />
-                        <input
-                            type="text"
-                            id="repoPath"
-                            placeholder="docs/"
-                            value="docs/"
-                        />
-                        <button id="saveRepoConfig" class="btn-primary">
-                            Save Config
-                        </button>
                     </div>
 
                     <div id="fileList" class="file-list">
-                        <p class="empty-state">Login untuk melihat dokumen</p>
+                        <p class="empty-state">Loading documents...</p>
                     </div>
                 </aside>
 
@@ -103,51 +64,50 @@
                 <main class="content-area">
                     <div id="welcomeScreen" class="welcome-screen">
                         <div class="welcome-content">
-                            <h2>🚀 Selamat Datang di MD Docs Manager</h2>
+                            <h2>📝 Online Markdown Storage</h2>
                             <p>
-                                Sistem dokumentasi berbasis Markdown dengan
-                                GitHub sebagai storage
+                                Simple & free markdown document storage powered
+                                by GitHub
                             </p>
 
                             <div class="features">
                                 <div class="feature">
+                                    <span class="icon">👁️</span>
+                                    <h3>Public Access</h3>
+                                    <p>Anyone can read documents</p>
+                                </div>
+                                <div class="feature">
+                                    <span class="icon">🔑</span>
+                                    <h3>Admin Mode</h3>
+                                    <p>Create & edit with token</p>
+                                </div>
+                                <div class="feature">
                                     <span class="icon">📁</span>
                                     <h3>Unlimited Storage</h3>
-                                    <p>Simpan dokumen di GitHub repository</p>
-                                </div>
-                                <div class="feature">
-                                    <span class="icon">👥</span>
-                                    <h3>Kolaborasi Tim</h3>
-                                    <p>Share & edit bersama team</p>
-                                </div>
-                                <div class="feature">
-                                    <span class="icon">🔄</span>
-                                    <h3>Version Control</h3>
-                                    <p>Git history otomatis</p>
+                                    <p>Stored on GitHub</p>
                                 </div>
                                 <div class="feature">
                                     <span class="icon">🎨</span>
                                     <h3>Markdown Support</h3>
-                                    <p>Full markdown + syntax highlighting</p>
+                                    <p>Full markdown syntax</p>
                                 </div>
                             </div>
 
                             <div class="start-guide">
-                                <h3>Cara Memulai:</h3>
+                                <h3>How to use:</h3>
                                 <ol>
                                     <li>
-                                        Klik "Login with GitHub" untuk OAuth
-                                        (recommended) atau "Use Token"
+                                        <strong>Public:</strong> Browse and read
+                                        documents
                                     </li>
                                     <li>
-                                        Authorize aplikasi untuk akses
-                                        repository
+                                        <strong>Admin:</strong> Click "Admin
+                                        Mode" to create/edit (requires token)
                                     </li>
-                                    <li>Atur repository target di sidebar</li>
                                     <li>
-                                        Upload file .md atau buat dokumen baru
+                                        Create new document or upload .md file
                                     </li>
-                                    <li>Share link ke tim untuk kolaborasi</li>
+                                    <li>Share link to anyone</li>
                                 </ol>
                             </div>
                         </div>
@@ -160,10 +120,18 @@
                                 <span id="docPath" class="doc-path"></span>
                             </div>
                             <div class="doc-actions">
-                                <button id="editBtn" class="btn-secondary">
+                                <button
+                                    id="editBtn"
+                                    class="btn-secondary"
+                                    disabled
+                                >
                                     ✏️ Edit
                                 </button>
-                                <button id="deleteBtn" class="btn-danger">
+                                <button
+                                    id="deleteBtn"
+                                    class="btn-danger"
+                                    disabled
+                                >
                                     🗑️ Delete
                                 </button>
                                 <button id="downloadBtn" class="btn-secondary">
@@ -199,7 +167,7 @@
                                 <h3>Editor</h3>
                                 <textarea
                                     id="markdownEditor"
-                                    placeholder="# Tulis markdown di sini..."
+                                    placeholder="# Paste or type your markdown here..."
                                 ></textarea>
                             </div>
                             <div class="preview-panel">
