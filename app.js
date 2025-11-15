@@ -39,14 +39,14 @@ const elements = {
 };
 
 // Initialize
-function init() {
+async function init() {
   if (state.token) {
     state.isAdmin = true;
     updateUI();
   }
 
   setupEventListeners();
-  loadFiles();
+  await loadFiles();
   handleURLRouting();
 }
 
