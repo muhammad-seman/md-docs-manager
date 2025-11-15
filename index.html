@@ -1,147 +1,227 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MD Docs Manager - GitHub Storage</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
-</head>
-<body>
-    <div class="container">
-        <!-- Header -->
-        <header>
-            <div class="header-content">
-                <h1>📝 MD Docs Manager</h1>
-                <div class="header-actions">
-                    <button id="themeToggle" class="btn-icon" title="Toggle Theme">🌙</button>
-                    <div id="userInfo" class="user-info hidden">
-                        <span id="username"></span>
-                        <button id="logoutBtn" class="btn-secondary">Logout</button>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>MD Docs Manager - GitHub Storage</title>
+        <link rel="stylesheet" href="style.css" />
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css"
+        />
+    </head>
+    <body>
+        <div class="container">
+            <!-- Header -->
+            <header>
+                <div class="header-content">
+                    <h1>📝 MD Docs Manager</h1>
+                    <div class="header-actions">
+                        <button
+                            id="themeToggle"
+                            class="btn-icon"
+                            title="Toggle Theme"
+                        >
+                            🌙
+                        </button>
+                        <button
+                            id="loginBtn"
+                            class="btn-primary"
+                            style="display: inline-block"
+                        >
+                            Login with GitHub
+                        </button>
+                        <div
+                            id="userInfo"
+                            class="user-info"
+                            style="display: none"
+                        >
+                            <span id="username"></span>
+                            <button id="logoutBtn" class="btn-secondary">
+                                Logout
+                            </button>
+                        </div>
                     </div>
-                    <button id="loginBtn" class="btn-primary">Login with GitHub</button>
                 </div>
+            </header>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Sidebar -->
+                <aside class="sidebar">
+                    <div class="sidebar-header">
+                        <h2>Dokumen</h2>
+                        <button id="uploadBtn" class="btn-primary" disabled>
+                            + Upload
+                        </button>
+                    </div>
+
+                    <div class="search-box">
+                        <input
+                            type="text"
+                            id="searchInput"
+                            placeholder="🔍 Cari dokumen..."
+                        />
+                    </div>
+
+                    <div class="repo-config hidden" id="repoConfig">
+                        <h3>Repository Settings</h3>
+                        <input
+                            type="text"
+                            id="repoOwner"
+                            placeholder="username"
+                        />
+                        <input
+                            type="text"
+                            id="repoName"
+                            placeholder="repository-name"
+                        />
+                        <input
+                            type="text"
+                            id="repoPath"
+                            placeholder="docs/"
+                            value="docs/"
+                        />
+                        <button id="saveRepoConfig" class="btn-primary">
+                            Save Config
+                        </button>
+                    </div>
+
+                    <div id="fileList" class="file-list">
+                        <p class="empty-state">Login untuk melihat dokumen</p>
+                    </div>
+                </aside>
+
+                <!-- Content Area -->
+                <main class="content-area">
+                    <div id="welcomeScreen" class="welcome-screen">
+                        <div class="welcome-content">
+                            <h2>🚀 Selamat Datang di MD Docs Manager</h2>
+                            <p>
+                                Sistem dokumentasi berbasis Markdown dengan
+                                GitHub sebagai storage
+                            </p>
+
+                            <div class="features">
+                                <div class="feature">
+                                    <span class="icon">📁</span>
+                                    <h3>Unlimited Storage</h3>
+                                    <p>Simpan dokumen di GitHub repository</p>
+                                </div>
+                                <div class="feature">
+                                    <span class="icon">👥</span>
+                                    <h3>Kolaborasi Tim</h3>
+                                    <p>Share & edit bersama team</p>
+                                </div>
+                                <div class="feature">
+                                    <span class="icon">🔄</span>
+                                    <h3>Version Control</h3>
+                                    <p>Git history otomatis</p>
+                                </div>
+                                <div class="feature">
+                                    <span class="icon">🎨</span>
+                                    <h3>Markdown Support</h3>
+                                    <p>Full markdown + syntax highlighting</p>
+                                </div>
+                            </div>
+
+                            <div class="start-guide">
+                                <h3>Cara Memulai:</h3>
+                                <ol>
+                                    <li>Klik "Login with GitHub" di atas</li>
+                                    <li>
+                                        Authorize aplikasi untuk akses
+                                        repository
+                                    </li>
+                                    <li>Atur repository target di sidebar</li>
+                                    <li>
+                                        Upload file .md atau buat dokumen baru
+                                    </li>
+                                    <li>Share link ke tim untuk kolaborasi</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="viewerScreen" class="viewer-screen hidden">
+                        <div class="document-header">
+                            <div class="doc-title">
+                                <h2 id="docTitle">Document Title</h2>
+                                <span id="docPath" class="doc-path"></span>
+                            </div>
+                            <div class="doc-actions">
+                                <button id="editBtn" class="btn-secondary">
+                                    ✏️ Edit
+                                </button>
+                                <button id="deleteBtn" class="btn-danger">
+                                    🗑️ Delete
+                                </button>
+                                <button id="downloadBtn" class="btn-secondary">
+                                    ⬇️ Download
+                                </button>
+                            </div>
+                        </div>
+                        <div id="markdownContent" class="markdown-body"></div>
+                    </div>
+
+                    <div id="editorScreen" class="editor-screen hidden">
+                        <div class="editor-header">
+                            <input
+                                type="text"
+                                id="fileNameInput"
+                                placeholder="document-name.md"
+                                class="file-name-input"
+                            />
+                            <div class="editor-actions">
+                                <button id="saveBtn" class="btn-primary">
+                                    💾 Save
+                                </button>
+                                <button
+                                    id="cancelEditBtn"
+                                    class="btn-secondary"
+                                >
+                                    ❌ Cancel
+                                </button>
+                            </div>
+                        </div>
+                        <div class="editor-container">
+                            <div class="editor-panel">
+                                <h3>Editor</h3>
+                                <textarea
+                                    id="markdownEditor"
+                                    placeholder="# Tulis markdown di sini..."
+                                ></textarea>
+                            </div>
+                            <div class="preview-panel">
+                                <h3>Preview</h3>
+                                <div
+                                    id="markdownPreview"
+                                    class="markdown-body"
+                                ></div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
             </div>
-        </header>
-
-        <!-- Main Content -->
-        <div class="main-content">
-            <!-- Sidebar -->
-            <aside class="sidebar">
-                <div class="sidebar-header">
-                    <h2>Dokumen</h2>
-                    <button id="uploadBtn" class="btn-primary" disabled>+ Upload</button>
-                </div>
-
-                <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="🔍 Cari dokumen...">
-                </div>
-
-                <div class="repo-config hidden" id="repoConfig">
-                    <h3>Repository Settings</h3>
-                    <input type="text" id="repoOwner" placeholder="username">
-                    <input type="text" id="repoName" placeholder="repository-name">
-                    <input type="text" id="repoPath" placeholder="docs/" value="docs/">
-                    <button id="saveRepoConfig" class="btn-primary">Save Config</button>
-                </div>
-
-                <div id="fileList" class="file-list">
-                    <p class="empty-state">Login untuk melihat dokumen</p>
-                </div>
-            </aside>
-
-            <!-- Content Area -->
-            <main class="content-area">
-                <div id="welcomeScreen" class="welcome-screen">
-                    <div class="welcome-content">
-                        <h2>🚀 Selamat Datang di MD Docs Manager</h2>
-                        <p>Sistem dokumentasi berbasis Markdown dengan GitHub sebagai storage</p>
-
-                        <div class="features">
-                            <div class="feature">
-                                <span class="icon">📁</span>
-                                <h3>Unlimited Storage</h3>
-                                <p>Simpan dokumen di GitHub repository</p>
-                            </div>
-                            <div class="feature">
-                                <span class="icon">👥</span>
-                                <h3>Kolaborasi Tim</h3>
-                                <p>Share & edit bersama team</p>
-                            </div>
-                            <div class="feature">
-                                <span class="icon">🔄</span>
-                                <h3>Version Control</h3>
-                                <p>Git history otomatis</p>
-                            </div>
-                            <div class="feature">
-                                <span class="icon">🎨</span>
-                                <h3>Markdown Support</h3>
-                                <p>Full markdown + syntax highlighting</p>
-                            </div>
-                        </div>
-
-                        <div class="start-guide">
-                            <h3>Cara Memulai:</h3>
-                            <ol>
-                                <li>Klik "Login with GitHub" di atas</li>
-                                <li>Authorize aplikasi untuk akses repository</li>
-                                <li>Atur repository target di sidebar</li>
-                                <li>Upload file .md atau buat dokumen baru</li>
-                                <li>Share link ke tim untuk kolaborasi</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="viewerScreen" class="viewer-screen hidden">
-                    <div class="document-header">
-                        <div class="doc-title">
-                            <h2 id="docTitle">Document Title</h2>
-                            <span id="docPath" class="doc-path"></span>
-                        </div>
-                        <div class="doc-actions">
-                            <button id="editBtn" class="btn-secondary">✏️ Edit</button>
-                            <button id="deleteBtn" class="btn-danger">🗑️ Delete</button>
-                            <button id="downloadBtn" class="btn-secondary">⬇️ Download</button>
-                        </div>
-                    </div>
-                    <div id="markdownContent" class="markdown-body"></div>
-                </div>
-
-                <div id="editorScreen" class="editor-screen hidden">
-                    <div class="editor-header">
-                        <input type="text" id="fileNameInput" placeholder="document-name.md" class="file-name-input">
-                        <div class="editor-actions">
-                            <button id="saveBtn" class="btn-primary">💾 Save</button>
-                            <button id="cancelEditBtn" class="btn-secondary">❌ Cancel</button>
-                        </div>
-                    </div>
-                    <div class="editor-container">
-                        <div class="editor-panel">
-                            <h3>Editor</h3>
-                            <textarea id="markdownEditor" placeholder="# Tulis markdown di sini..."></textarea>
-                        </div>
-                        <div class="preview-panel">
-                            <h3>Preview</h3>
-                            <div id="markdownPreview" class="markdown-body"></div>
-                        </div>
-                    </div>
-                </div>
-            </main>
         </div>
-    </div>
 
-    <!-- Hidden File Input -->
-    <input type="file" id="fileInput" accept=".md,.markdown" multiple style="display: none;">
+        <!-- Hidden File Input -->
+        <input
+            type="file"
+            id="fileInput"
+            accept=".md,.markdown"
+            multiple
+            style="display: none"
+        />
 
-    <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="loading-overlay hidden">
-        <div class="spinner"></div>
-        <p>Loading...</p>
-    </div>
+        <!-- Loading Overlay -->
+        <div id="loadingOverlay" class="loading-overlay hidden">
+            <div class="spinner"></div>
+            <p>Loading...</p>
+        </div>
 
-    <script src="app.js"></script>
-</body>
+        <script src="app.js"></script>
+    </body>
 </html>
